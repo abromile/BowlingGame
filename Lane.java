@@ -29,15 +29,29 @@ public class Lane
 		{
 			//must have at least one player
 			System.out.println("Enter Player 1 name: ");
-			String newName = scan.next();
+			String newName = scan.nextLine();
+			while (newName.length() > 10)
+			{
+				System.out.println("Name must be 10 characters or less");
+				System.out.println("Enter Player 1 name: ");
+				newName = scan.nextLine();
+			}
 			playerManager.addPlayer(newName);
 			runGame();
 		}
 		//if user wants to quit
-		if (cmd.equals("q"))
+		else if (cmd.equals("q"))
 		{
 			System.out.println("Goodbye!");
 			System.exit(0);
+		}
+		else
+		{
+			System.out.println("You have entered an invalid command. ");
+			displayWelcomeMenu();
+			Scanner scan = new Scanner(System.in);
+			String command = scan.nextLine();
+			runWelcomeMenuCommand(command);
 		}
 	}
 
@@ -62,9 +76,9 @@ public class Lane
 		printBanner(curr_player, curr_frame);
 
 		//FIRST THROW
-		System.out.println("Press 'm' for menu or enter current throw. 1");
+		System.out.println("Press 'm' for menu or enter current throw. ");
 		System.out.println("Throw 1: ");
-		String cmd = scan.next();
+		String cmd = scan.nextLine();
 
 		if (cmd.equals("m"))
 		{
@@ -72,9 +86,9 @@ public class Lane
 			{
 				startMenu();
 				printBanner(curr_player, curr_frame);
-				System.out.println("Press 'm' for menu or enter current throw. 2");
+				System.out.println("Press 'm' for menu or enter current throw. ");
 				System.out.println("Throw 1: ");
-				cmd = scan.next();
+				cmd = scan.nextLine();
 			}
 			throw1 = Integer.parseInt(cmd);
 			//test
@@ -91,6 +105,14 @@ public class Lane
 			catch (InputMismatchException e)
 			{
 				System.out.println("***Press 'm' for menu or enter current throw. ");
+				System.out.println("Throw 1: ");
+				cmd = scan.nextLine();
+			}
+			catch (NumberFormatException e)
+			{
+				System.out.println("***Press 'm' for menu or enter current throw. ");
+				System.out.println("Throw 1: ");
+				cmd = scan.nextLine();
 			}
 		}
 
@@ -108,9 +130,9 @@ public class Lane
 		{
 			//SECOND THROW
 			printBanner(curr_player, curr_frame);
-			System.out.println("Press 'm' for menu or enter current throw. 1");
+			System.out.println("Press 'm' for menu or enter current throw. ");
 			System.out.println("Throw 2: ");
-			cmd = scan.next();
+			cmd = scan.nextLine();
 
 			if (cmd.equals("m"))
 			{
@@ -118,9 +140,9 @@ public class Lane
 				{
 					startMenu();
 					printBanner(curr_player, curr_frame);
-					System.out.println("Press 'm' for menu or enter current throw. 2");
+					System.out.println("Press 'm' for menu or enter current throw. ");
 					System.out.println("Throw 2: ");
-					cmd = scan.next();
+					cmd = scan.nextLine();
 				}
 				throw2 = Integer.parseInt(cmd);
 				//test
@@ -139,6 +161,14 @@ public class Lane
 				catch (InputMismatchException e)
 				{
 					System.out.println("***Press 'm' for menu or enter current throw. ");
+					System.out.println("Throw 2: ");
+					cmd = scan.nextLine();
+				}
+				catch (NumberFormatException e)
+				{
+					System.out.println("***Press 'm' for menu or enter current throw. ");
+					System.out.println("Throw 2: ");
+					cmd = scan.nextLine();
 				}
 			}
 
@@ -166,9 +196,9 @@ public class Lane
 		printBanner(curr_player, curr_frame);
 
 		//FIRST THROW
-		System.out.println("Press 'm' for menu or enter current throw. 1");
+		System.out.println("Press 'm' for menu or enter current throw. ");
 		System.out.println("Throw 1: ");
-		String cmd = scan.next();
+		String cmd = scan.nextLine();
 
 		if (cmd.equals("m"))
 		{
@@ -176,9 +206,9 @@ public class Lane
 			{
 				startMenu();
 				printBanner(curr_player, curr_frame);
-				System.out.println("Press 'm' for menu or enter current throw. 2");
+				System.out.println("Press 'm' for menu or enter current throw. ");
 				System.out.println("Throw 1: ");
-				cmd = scan.next();
+				cmd = scan.nextLine();
 			}
 			throw1 = Integer.parseInt(cmd);
 			//test
@@ -195,6 +225,14 @@ public class Lane
 			catch (InputMismatchException e)
 			{
 				System.out.println("***Press 'm' for menu or enter current throw. ");
+				System.out.println("Throw 1: ");
+				cmd = scan.nextLine();
+			}
+			catch (NumberFormatException e)
+			{
+				System.out.println("***Press 'm' for menu or enter current throw. ");
+				System.out.println("Throw 1: ");
+				cmd = scan.nextLine();
 			}
 		}
 
@@ -210,9 +248,9 @@ public class Lane
 
 		//SECOND THROW
 		printBanner(curr_player, curr_frame);
-		System.out.println("Press 'm' for menu or enter current throw. 1");
+		System.out.println("Press 'm' for menu or enter current throw. ");
 		System.out.println("Throw 2: ");
-		cmd = scan.next();
+		cmd = scan.nextLine();
 
 		if (cmd.equals("m"))
 		{
@@ -220,9 +258,9 @@ public class Lane
 			{
 				startMenu();
 				printBanner(curr_player, curr_frame);
-				System.out.println("Press 'm' for menu or enter current throw. 2");
+				System.out.println("Press 'm' for menu or enter current throw. ");
 				System.out.println("Throw 2: ");
-				cmd = scan.next();
+				cmd = scan.nextLine();
 			}
 			throw2 = Integer.parseInt(cmd);
 			//test
@@ -241,6 +279,14 @@ public class Lane
 			catch (InputMismatchException e)
 			{
 				System.out.println("***Press 'm' for menu or enter current throw. ");
+				System.out.println("Throw 2: ");
+				cmd = scan.nextLine();
+			}
+			catch (NumberFormatException e)
+			{
+				System.out.println("***Press 'm' for menu or enter current throw. ");
+				System.out.println("Throw 2: ");
+				cmd = scan.nextLine();
 			}
 		}
 		if(throw2 == 10)
@@ -260,7 +306,7 @@ public class Lane
 			printBanner(curr_player, curr_frame);
 			System.out.println("Press 'm' for menu or enter current throw.");
 			System.out.println("Throw 3: ");
-			cmd = scan.next();
+			cmd = scan.nextLine();
 
 			if (cmd.equals("m"))
 			{
@@ -270,7 +316,7 @@ public class Lane
 					printBanner(curr_player, curr_frame);
 					System.out.println("Press 'm' for menu or enter current throw.");
 					System.out.println("Throw 3: ");
-					cmd = scan.next();
+					cmd = scan.nextLine();
 				}
 				extrathrow = Integer.parseInt(cmd);
 				//test
@@ -289,6 +335,14 @@ public class Lane
 				catch (InputMismatchException e)
 				{
 					System.out.println("***Press 'm' for menu or enter current throw. ");
+					System.out.println("Throw 3: ");
+					cmd = scan.nextLine();
+				}
+				catch (NumberFormatException e)
+				{
+					System.out.println("***Press 'm' for menu or enter current throw. ");
+					System.out.println("Throw 3: ");
+					cmd = scan.nextLine();
 				}
 			}
 			if(throw2 < 10 && throw2 + extrathrow == 10)
@@ -332,7 +386,7 @@ public class Lane
 	{
 		Scanner scan = new Scanner(System.in);
 		displayMenu();
-		String command = scan.next();
+		String command = scan.nextLine();
 		runCommand(command);
 	}
 
@@ -368,7 +422,13 @@ public class Lane
 			else
 			{
 				System.out.println("Enter new player's name: ");
-				String newName = scan.next();
+				String newName = scan.nextLine();
+				while (newName.length() > 10)
+				{
+					System.out.println("Name must be 10 characters or less");
+					System.out.println("Enter new player's name: ");
+					newName = scan.nextLine();
+				}
 				playerManager.addPlayer(newName);
 				board.printBoard(playerManager.getPlayerList());
 			}
@@ -426,9 +486,17 @@ public class Lane
 		else if (cmd.equals("p"))
 		{
 			System.out.println("Which player? (Enter a number 1-6)");
-			player_to_change = scan.nextInt();
+			String player = scan.nextLine();
+			player_to_change = Integer.parseInt(player);
 			System.out.println("What is the new name? ");
-			playerManager.editName(player_to_change - 1, scan.next());
+			String name = scan.nextLine();
+			while (name.length() > 10)
+			{
+				System.out.println("Name must be 10 characters or less");
+				System.out.println("What is the new name? ");
+				name = scan.nextLine();
+			}
+			playerManager.editName(player_to_change - 1, name);
 			board.printBoard(playerManager.getPlayerList());
 		}
 
@@ -543,7 +611,7 @@ public class Lane
 		//Main menu
 		displayWelcomeMenu();
 		//interpret commands
-		runWelcomeMenuCommand(scan.next());
+		runWelcomeMenuCommand(scan.nextLine());
 	}
 
 }
