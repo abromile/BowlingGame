@@ -6,7 +6,7 @@ public class Player
 	private String name;
 	private ArrayList<Integer> firstThrows = new ArrayList<Integer>(Master.NUM_FRAMES);
 	private ArrayList<Integer> secondThrows = new ArrayList<Integer>(Master.NUM_FRAMES);
-	private int extraBall = 0;
+	private int extraThrow = 0;
 	private int score;
 	
 	
@@ -20,7 +20,7 @@ public class Player
 	{
 		name = "Player"; // should be "Player #"
 		score = 0;
-		for (int i = 0; i < firstThrows.size(); i++)
+		for (int i = 0; i < Master.NUM_FRAMES; i++)
 		{
 			firstThrows.add(0);
 			secondThrows.add(0);
@@ -35,7 +35,7 @@ public class Player
 	{
 		name = n;
 		score = 0;
-		for (int i = 0; i < firstThrows.size(); i++)
+		for (int i = 0; i < Master.NUM_FRAMES; i++)
 		{
 			firstThrows.add(0);
 			secondThrows.add(0);
@@ -64,19 +64,9 @@ public class Player
 		secondThrows.set(frame, score);
 	}
 	
-	public void addThrow1(int frame, int score)
+	public void setExtraThrow(int score)
 	{
-		firstThrows.add(score);
-	}
-	
-	public void addThrow2(int frame, int score)
-	{
-		secondThrows.add(score);
-	}
-	
-	public void setExtraBall(int score)
-	{
-		extraBall = score;
+		extraThrow = score;
 	}
 	
 	//**************** GETTERS **************************
@@ -101,9 +91,9 @@ public class Player
 		return secondThrows.get(frame);
 	}
 	
-	public int getExtraBall()
+	public int getExtraThrow()
 	{
-		return extraBall;
+		return extraThrow;
 	}
 	
 	public ArrayList<Integer> getThrow1s()

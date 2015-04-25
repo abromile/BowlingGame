@@ -44,7 +44,10 @@ public class PlayerManager {
 	 */
 	public void editScore(int index, int score)
 	{
-		players.get(index).setScore(score);
+		if(score >= 0 && score <= 300)
+		{
+			players.get(index).setScore(score);
+		}
 	}
 
 	/**
@@ -56,11 +59,6 @@ public class PlayerManager {
 		if(players.size() < 6)
 		{
 			players.add(new Player(name));
-			for (int i = 0; i < Master.NUM_FRAMES; i++)
-			{
-				players.get(players.size()-1).addThrow1(i, 0);
-				players.get(players.size()-1).addThrow2(i, 0);
-			}
 		}
 	}
 
@@ -81,9 +79,16 @@ public class PlayerManager {
 	 * @param index; index of player
 	 * @return name of player at index index
 	 */
-	public String getPlayerAt(int index)
+	public String getPlayerName(int index)
 	{
-		return players.get(index).getName();
+		if(index >= 0 && index < players.size())
+		{
+			return players.get(index).getName();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	public Player getPlayer(int index)

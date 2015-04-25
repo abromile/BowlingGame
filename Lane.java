@@ -1,10 +1,11 @@
+import java.io.ByteArrayInputStream;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Lane 
 {
 	private static PlayerManager playerManager;
-	public static Scanner scan = new Scanner(System.in);
+	public static Scanner scan;
 	private static Board board;
 
 	/**
@@ -32,7 +33,7 @@ public class Lane
 			String newName = scan.nextLine();
 			while (newName.length() > 10)
 			{
-				System.out.println("Name must be 10 characters or less");
+				System.out.println("Name must be 10 or less characters.");
 				System.out.println("Enter Player 1 name: ");
 				newName = scan.nextLine();
 			}
@@ -49,7 +50,6 @@ public class Lane
 		{
 			System.out.println("You have entered an invalid command. ");
 			displayWelcomeMenu();
-			Scanner scan = new Scanner(System.in);
 			String command = scan.nextLine();
 			runWelcomeMenuCommand(command);
 		}
@@ -59,7 +59,7 @@ public class Lane
 	{
 		System.out.println("");
 		System.out.print("PLAYER: ");
-		System.out.print(playerManager.getPlayerAt(curr_player));
+		System.out.print(playerManager.getPlayerName(curr_player));
 		System.out.println("   FRAME: " + (curr_frame+1));
 		System.out.println("----------------------------------------");
 	}
@@ -71,112 +71,101 @@ public class Lane
 	 */
 	public static void runFrame(int curr_player, int curr_frame)
 	{
-		int throw1 = 0, throw2 = 0;
-
-		printBanner(curr_player, curr_frame);
+		int 	throw1 = 0,
+				throw2 = 0;
+		boolean flag = false;
+		String 	cmd;
 
 		//FIRST THROW
-		System.out.println("Press 'm' for menu or enter current throw. ");
-		System.out.println("Throw 1: ");
-		String cmd = scan.nextLine();
-
-		if (cmd.equals("m"))
+		while(!flag)
 		{
-			while(cmd.equals("m"))
-			{
-				startMenu();
-				printBanner(curr_player, curr_frame);
-				System.out.println("Press 'm' for menu or enter current throw. ");
-				System.out.println("Throw 1: ");
-				cmd = scan.nextLine();
-			}
-			throw1 = Integer.parseInt(cmd);
-			//test
-			//System.out.println("changing throw 1 1");
-			playerManager.setThrow1m(curr_player, curr_frame, throw1);
-		}
-		else
-		{
-			try
-			{
-				throw1 = Integer.parseInt(cmd);
-				playerManager.setThrow1m(curr_player, curr_frame, throw1);
-			}
-			catch (InputMismatchException e)
-			{
-				System.out.println("***Press 'm' for menu or enter current throw. ");
-				System.out.println("Throw 1: ");
-				cmd = scan.nextLine();
-			}
-			catch (NumberFormatException e)
-			{
-				System.out.println("***Press 'm' for menu or enter current throw. ");
-				System.out.println("Throw 1: ");
-				cmd = scan.nextLine();
-			}
-		}
-
-		//test
-		//playerManager.getPlayer(curr_player).setThrow2(curr_frame, 0);
-		calculateScore(curr_player);
-		board.printBoard(playerManager.getPlayerList());
-
-		if (throw1 == 10)
-		{
-			playerManager.getPlayer(curr_player).setThrow2(curr_frame, 0);
-			System.out.println("STRIKE!");
-		}
-		else
-		{
-			//SECOND THROW
 			printBanner(curr_player, curr_frame);
 			System.out.println("Press 'm' for menu or enter current throw. ");
-			System.out.println("Throw 2: ");
+			System.out.println("Throw 1: ");
 			cmd = scan.nextLine();
-
+			
 			if (cmd.equals("m"))
 			{
-				while(cmd.equals("m"))
-				{
-					startMenu();
-					printBanner(curr_player, curr_frame);
-					System.out.println("Press 'm' for menu or enter current throw. ");
-					System.out.println("Throw 2: ");
-					cmd = scan.nextLine();
-				}
-				throw2 = Integer.parseInt(cmd);
-				//test
-				//System.out.println("changing throw 2");
-				playerManager.getPlayer(curr_player).setThrow2(curr_frame, throw2);
+				startMenu();
 			}
 			else
 			{
-				try
-				{
-					throw2 = Integer.parseInt(cmd);
-					//test
-					//System.out.println("changing throw 2");
-					playerManager.getPlayer(curr_player).setThrow2(curr_frame, throw2);
-				}
-				catch (InputMismatchException e)
-				{
-					System.out.println("***Press 'm' for menu or enter current throw. ");
-					System.out.println("Throw 2: ");
-					cmd = scan.nextLine();
-				}
-				catch (NumberFormatException e)
-				{
-					System.out.println("***Press 'm' for menu or enter current throw. ");
-					System.out.println("Throw 2: ");
-					cmd = scan.nextLine();
-				}
+			    try
+			    {  
+					throw1 = Integer.parseInt(cmd);
+					if(throw1 > 10 || throw1 < 0)
+					{
+						 System.out.println("Please enter a valid throw."); 
+					}
+					else
+					{
+						playerManager.setThrow1m(curr_player, curr_frame, throw1);
+						flag = true;
+						if (throw1 == 10)
+						{
+							playerManager.getPlayer(curr_player).setThrow2(curr_frame, 0);
+							System.out.println("STRIKE!");
+						}
+					}
+			    }
+			    catch(NumberFormatException e)
+			    { 
+			        System.out.println("Please enter a valid throw."); 
+			    }
+			    catch(NullPointerException e)
+			    {
+			    	System.out.println("Please enter a valid throw."); 
+			    }
 			}
-
-			if ((throw1 + throw2) == 10)
+		}
+		calculateScore(curr_player);
+		board.printBoard(playerManager.getPlayerList());
+	
+		//SECOND THROW
+		if(throw1 < 10)
+		{	
+			flag = false;
+			while(!flag)
 			{
-				System.out.println("SPARE!");
+				printBanner(curr_player, curr_frame);
+				System.out.println("Press 'm' for menu or enter current throw. ");
+				System.out.println("Throw 2: ");
+				cmd = scan.nextLine();
+				
+				if (cmd.equals("m"))
+				{
+					startMenu();
+					printBanner(curr_player, curr_frame);
+				}
+				else
+				{
+				    try
+				    {  
+						throw2 = Integer.parseInt(cmd);
+						if(throw2 > 10 || throw2 < 0 || throw1 + throw2 > 10)
+						{
+							 System.out.println("Please enter a valid throw."); 
+						}
+						else
+						{
+							playerManager.setThrow2m(curr_player, curr_frame, throw2);
+							flag = true;
+							if ((throw1 + throw2) == 10)
+							{
+								System.out.println("SPARE!");
+							}
+						}
+				    }
+				    catch(NumberFormatException e)
+				    { 
+				        System.out.println("Please enter a valid throw."); 
+				    }
+				    catch(NullPointerException e)
+				    {
+				    	System.out.println("Please enter a valid throw."); 
+				    }
+				}
 			}
-
 			calculateScore(curr_player);
 			board.printBoard(playerManager.getPlayerList());
 		}
@@ -189,173 +178,160 @@ public class Lane
 	 */
 	public static void runLastFrame(int curr_player, int curr_frame)
 	{
-		int throw1 = 0,
+		int 	throw1 = 0,
 				throw2 = 0,
 				extrathrow = 0;
-
-		printBanner(curr_player, curr_frame);
+		boolean flag = false;
+		String 	cmd;
 
 		//FIRST THROW
-		System.out.println("Press 'm' for menu or enter current throw. ");
-		System.out.println("Throw 1: ");
-		String cmd = scan.nextLine();
-
-		if (cmd.equals("m"))
-		{
-			while(cmd.equals("m"))
-			{
-				startMenu();
-				printBanner(curr_player, curr_frame);
-				System.out.println("Press 'm' for menu or enter current throw. ");
-				System.out.println("Throw 1: ");
-				cmd = scan.nextLine();
-			}
-			throw1 = Integer.parseInt(cmd);
-			//test
-			//System.out.println("changing throw 1 1");
-			playerManager.setThrow1m(curr_player, curr_frame, throw1);
-		}
-		else
-		{
-			try
-			{
-				throw1 = Integer.parseInt(cmd);
-				playerManager.setThrow1m(curr_player, curr_frame, throw1);
-			}
-			catch (InputMismatchException e)
-			{
-				System.out.println("***Press 'm' for menu or enter current throw. ");
-				System.out.println("Throw 1: ");
-				cmd = scan.nextLine();
-			}
-			catch (NumberFormatException e)
-			{
-				System.out.println("***Press 'm' for menu or enter current throw. ");
-				System.out.println("Throw 1: ");
-				cmd = scan.nextLine();
-			}
-		}
-
-		//test
-		//playerManager.getPlayer(curr_player).setThrow2(curr_frame, 0);
-		calculateScore(curr_player);
-		board.printBoard(playerManager.getPlayerList());
-		if (throw1 == 10)
-		{
-			playerManager.getPlayer(curr_player).setThrow2(curr_frame, 0);
-			System.out.println("STRIKE!");
-		}
-
-		//SECOND THROW
-		printBanner(curr_player, curr_frame);
-		System.out.println("Press 'm' for menu or enter current throw. ");
-		System.out.println("Throw 2: ");
-		cmd = scan.nextLine();
-
-		if (cmd.equals("m"))
-		{
-			while(cmd.equals("m"))
-			{
-				startMenu();
-				printBanner(curr_player, curr_frame);
-				System.out.println("Press 'm' for menu or enter current throw. ");
-				System.out.println("Throw 2: ");
-				cmd = scan.nextLine();
-			}
-			throw2 = Integer.parseInt(cmd);
-			//test
-			//System.out.println("changing throw 2");
-			playerManager.getPlayer(curr_player).setThrow2(curr_frame, throw2);
-		}
-		else
-		{
-			try
-			{
-				throw2 = Integer.parseInt(cmd);
-				//test
-				//System.out.println("changing throw 2");
-				playerManager.getPlayer(curr_player).setThrow2(curr_frame, throw2);
-			}
-			catch (InputMismatchException e)
-			{
-				System.out.println("***Press 'm' for menu or enter current throw. ");
-				System.out.println("Throw 2: ");
-				cmd = scan.nextLine();
-			}
-			catch (NumberFormatException e)
-			{
-				System.out.println("***Press 'm' for menu or enter current throw. ");
-				System.out.println("Throw 2: ");
-				cmd = scan.nextLine();
-			}
-		}
-		if(throw2 == 10)
-		{
-			System.out.println("STRIKE!");
-		}
-		else if(throw1 + throw2 == 10)
-		{
-			System.out.println("SPARE!");
-		}
-		calculateScore(curr_player);
-		board.printBoard(playerManager.getPlayerList());
-
-		//EXTRA THROW
-		if(throw1 == 10 || throw2 == 10 || throw1 + throw2 == 10)
+		while(!flag)
 		{
 			printBanner(curr_player, curr_frame);
-			System.out.println("Press 'm' for menu or enter current throw.");
-			System.out.println("Throw 3: ");
+			System.out.println("Press 'm' for menu or enter current throw. ");
+			System.out.println("Throw 1: ");
 			cmd = scan.nextLine();
-
+			
 			if (cmd.equals("m"))
 			{
-				while(cmd.equals("m"))
-				{
-					startMenu();
-					printBanner(curr_player, curr_frame);
-					System.out.println("Press 'm' for menu or enter current throw.");
-					System.out.println("Throw 3: ");
-					cmd = scan.nextLine();
-				}
-				extrathrow = Integer.parseInt(cmd);
-				//test
-				//System.out.println("changing throw 2");
-				playerManager.getPlayer(curr_player).setExtraBall(extrathrow);
+				startMenu();
+				printBanner(curr_player, curr_frame);
 			}
 			else
 			{
-				try
-				{
-					extrathrow = Integer.parseInt(cmd);
-					//test
-					//System.out.println("changing throw 2");
-					playerManager.getPlayer(curr_player).setExtraBall(extrathrow);
-				}
-				catch (InputMismatchException e)
-				{
-					System.out.println("***Press 'm' for menu or enter current throw. ");
-					System.out.println("Throw 3: ");
-					cmd = scan.nextLine();
-				}
-				catch (NumberFormatException e)
-				{
-					System.out.println("***Press 'm' for menu or enter current throw. ");
-					System.out.println("Throw 3: ");
-					cmd = scan.nextLine();
-				}
-			}
-			if(throw2 < 10 && throw2 + extrathrow == 10)
-			{
-				System.out.println("SPARE!");
-			}
-			else if(extrathrow == 10)
-			{
-				System.out.println("STRIKE!");
+			    try
+			    {  
+					throw1 = Integer.parseInt(cmd);
+					if(throw1 > 10 || throw1 < 0)
+					{
+						 System.out.println("Please enter a valid throw."); 
+					}
+					else
+					{
+						playerManager.setThrow1m(curr_player, curr_frame, throw1);
+						flag = true;
+						if (throw1 == 10)
+						{
+							playerManager.getPlayer(curr_player).setThrow2(curr_frame, 0);
+							System.out.println("STRIKE!");
+						}
+					}
+			    }
+			    catch(NumberFormatException e)
+			    { 
+			        System.out.println("Please enter a valid throw."); 
+			    }
+			    catch(NullPointerException e)
+			    {
+			    	System.out.println("Please enter a valid throw."); 
+			    }
 			}
 		}
 		calculateScore(curr_player);
 		board.printBoard(playerManager.getPlayerList());
+	
+		//SECOND THROW
+		flag = false;
+		while(!flag)
+		{
+			printBanner(curr_player, curr_frame);
+			System.out.println("Press 'm' for menu or enter current throw. ");
+			System.out.println("Throw 2: ");
+			cmd = scan.nextLine();
+			
+			if (cmd.equals("m"))
+			{
+				startMenu();
+				printBanner(curr_player, curr_frame);
+			}
+			else
+			{
+			    try
+			    {  
+					throw2 = Integer.parseInt(cmd);
+					if(throw2 > 10 || throw2 < 0 || (throw1 + throw2 > 10 && throw1 != 10))
+					{
+						 System.out.println("Please enter a valid throw."); 
+					}
+					else
+					{
+						playerManager.setThrow2m(curr_player, curr_frame, throw2);
+						flag = true;
+						if(throw1 == 10 && throw2 == 10)
+						{
+							System.out.println("STRIKE!");
+						}
+						else if ((throw1 + throw2) == 10 && throw2 != 0)
+						{
+							System.out.println("SPARE!");
+						}
+					}
+			    }
+			    catch(NumberFormatException e)
+			    { 
+			        System.out.println("Please enter a valid throw."); 
+			    }
+			    catch(NullPointerException e)
+			    {
+			    	System.out.println("Please enter a valid throw."); 
+			    }
+			}
+		}
+		calculateScore(curr_player);
+		board.printBoard(playerManager.getPlayerList());
+		
+		//EXTRA THROW
+		if(throw1 == 10 || throw2 == 10 || throw1 + throw2 == 10)
+		{
+			flag = false;
+			while(!flag)
+			{
+				printBanner(curr_player, curr_frame);
+				System.out.println("Press 'm' for menu or enter current throw. ");
+				System.out.println("Throw 3: ");
+				cmd = scan.nextLine();
+				
+				if (cmd.equals("m"))
+				{
+					startMenu();
+					printBanner(curr_player, curr_frame);
+				}
+				else
+				{
+				    try
+				    {  
+						extrathrow = Integer.parseInt(cmd);
+						if(extrathrow > 10 || extrathrow < 0 || (throw2 + extrathrow > 10 && (throw2 != 10 && throw1 + throw2 != 10)))
+						{
+							 System.out.println("Please enter a valid throw."); 
+						}
+						else
+						{
+							playerManager.getPlayer(curr_player).setExtraThrow(extrathrow);
+							flag = true;
+							if(throw2 == 10 && extrathrow == 10)
+							{
+								System.out.println("STRIKE!");
+							}
+							else if (throw2 + extrathrow == 10 && extrathrow != 0)
+							{
+								System.out.println("SPARE!");
+							}
+						}
+				    }
+				    catch(NumberFormatException e)
+				    { 
+				        System.out.println("Please enter a valid throw."); 
+				    }
+				    catch(NullPointerException e)
+				    {
+				    	System.out.println("Please enter a valid throw."); 
+				    }
+				}
+			}
+			calculateScore(curr_player);
+			board.printBoard(playerManager.getPlayerList());
+		}
 	}
 
 	/**
@@ -384,7 +360,6 @@ public class Lane
 	 */
 	public static void startMenu()
 	{
-		Scanner scan = new Scanner(System.in);
 		displayMenu();
 		String command = scan.nextLine();
 		runCommand(command);
@@ -425,7 +400,7 @@ public class Lane
 				String newName = scan.nextLine();
 				while (newName.length() > 10)
 				{
-					System.out.println("Name must be 10 characters or less");
+					System.out.println("Name must be 10 or less characters.");
 					System.out.println("Enter new player's name: ");
 					newName = scan.nextLine();
 				}
@@ -444,60 +419,78 @@ public class Lane
 
 			else
 			{
-				System.out.println("Which player? (Enter a number 1-6)");
+				System.out.println("Which player? (Enter a number 1-" + playerManager.playerCount() + ")");
 				int player_to_remove = scan.nextInt();
-				playerManager.removePlayer(player_to_remove - 1);
-				board.printBoard(playerManager.getPlayerList());
+				if(player_to_remove < 1 || player_to_remove > playerManager.playerCount())
+				{
+					System.out.println("Player " + player_to_remove + " doesn't exist");
+				}
+				else
+				{
+					playerManager.removePlayer(player_to_remove - 1);
+					board.printBoard(playerManager.getPlayerList());
+				}
 			}
 		}
 
 		//EDIT THROW
 		else if (cmd.equals("e"))
 		{
-			System.out.println("Which player? (Enter a number 1-6)");
+			System.out.println("Which player? (Enter a number 1-" + playerManager.playerCount() + ")");
 			int player = scan.nextInt();
-			System.out.println("Which frame? (Enter a number 1-10)");
-			eframe = scan.nextInt();
-			if (eframe != 10)
+			if(player < 1 || player> playerManager.playerCount())
 			{
-				System.out.println("Which throw? (Enter 1 or 2)");
-				ethrow = scan.nextInt();
+				System.out.println("Player " + player + " doesn't exist");
 			}
-			else 
+			else
 			{
-				System.out.println("Which throw? (Enter 1 or 2 or 3)");
-				ethrow = scan.nextInt();
+				System.out.println("Which frame? (Enter a number 1-10)");
+				eframe = scan.nextInt();
+				if(eframe <= 10 || eframe >= 1)
+				{
+					if (eframe != 10)
+					{
+						System.out.println("Which throw? (Enter 1 or 2)");
+						ethrow = scan.nextInt();
+					}
+					else 
+					{
+						System.out.println("Which throw? (Enter 1 or 2 or 3)");
+						ethrow = scan.nextInt();
+					}
+				}
+				else
+				{
+					System.out.println("Invalid frame.");
+				}
 			}
-			System.out.println("What is the new score? ");
-			int score = scan.nextInt();
-			if (ethrow == 1)
-			{
-				playerManager.getPlayer(player - 1).setThrow1(eframe - 1, score);
-			}
-			if (ethrow == 2)
-			{
-				playerManager.getPlayer(player - 1).setThrow2(eframe - 1, score);
-			}
-			board.printBoard(playerManager.getPlayerList());
+			
 
 		}
 
 		//EDIT PLAYER NAME
 		else if (cmd.equals("p"))
 		{
-			System.out.println("Which player? (Enter a number 1-6)");
+			System.out.println("Which player? (Enter a number 1-" + playerManager.playerCount() + ")");
 			String player = scan.nextLine();
 			player_to_change = Integer.parseInt(player);
-			System.out.println("What is the new name? ");
-			String name = scan.nextLine();
-			while (name.length() > 10)
+			if(player_to_change < 1 || player_to_change > playerManager.playerCount())
 			{
-				System.out.println("Name must be 10 characters or less");
-				System.out.println("What is the new name? ");
-				name = scan.nextLine();
+				System.out.println("Player " + player + " doesn't exist");
 			}
-			playerManager.editName(player_to_change - 1, name);
-			board.printBoard(playerManager.getPlayerList());
+			else
+			{
+				System.out.println("What is the new name? ");
+				String name = scan.nextLine();
+				while (name.length() > 10)
+				{
+					System.out.println("Name must be 1 to 10 characters in length");
+					System.out.println("What is the new name? ");
+					name = scan.nextLine();
+				}
+				playerManager.editName(player_to_change - 1, name);
+				board.printBoard(playerManager.getPlayerList());
+			}
 		}
 
 		//RETURN TO GAME
@@ -583,7 +576,7 @@ public class Lane
 		if (playerManager.getPlayer(player).getThrow1(9) == 10)
 		{
 			//add 10 + next 2 balls
-			playerManager.getPlayer(player).setScore(playerManager.getPlayer(player).getScore() + 10 + playerManager.getPlayer(player).getThrow2(9) + playerManager.getPlayer(player).getExtraBall());
+			playerManager.getPlayer(player).setScore(playerManager.getPlayer(player).getScore() + 10 + playerManager.getPlayer(player).getThrow2(9) + playerManager.getPlayer(player).getExtraThrow());
 		}
 
 		//if they got a spare
@@ -601,18 +594,17 @@ public class Lane
 	}
 
 	public static void main(String[] args)
-	{
-		Scanner scan = new Scanner(System.in);
+	{		
+		scan = new Scanner(System.in);
 		playerManager = new PlayerManager();
 		board = new Board();
-
 		//set up for new game
 
 		//Main menu
 		displayWelcomeMenu();
+		
 		//interpret commands
 		runWelcomeMenuCommand(scan.nextLine());
 	}
 
 }
-

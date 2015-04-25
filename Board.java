@@ -77,24 +77,24 @@ public class Board
 		}
 		
 		//third throw
-		if((player.getExtraBall() != 0) && (player.getThrow1(9) == 10 || player.getThrow2(9) == 10 || player.getThrow1(9) + player.getThrow2(9) == 10))
+		if((player.getExtraThrow() != 0) && (player.getThrow1(9) == 10 || player.getThrow2(9) == 10 || player.getThrow1(9) + player.getThrow2(9) == 10))
 		{
-			if((player.getThrow2(9) == 10 || (player.getThrow1(9) < 10 && player.getThrow1(9) + player.getThrow2(9) == 10)) && player.getExtraBall() == 10)
+			if((player.getThrow2(9) == 10 || (player.getThrow1(9) < 10 && player.getThrow1(9) + player.getThrow2(9) == 10)) && player.getExtraThrow() == 10)
 			{
 				System.out.print("X");
 			}
-			else if((player.getThrow2(9) + player.getExtraBall() == 10) && (player.getThrow1(9) == 10 || (player.getThrow1(9) + player.getThrow2(9) == 10 && player.getThrow2(9) == 0)))
+			else if((player.getThrow2(9) + player.getExtraThrow() == 10) && (player.getThrow1(9) == 10 || (player.getThrow1(9) + player.getThrow2(9) == 10 && player.getThrow2(9) == 0)))
 			{
 				System.out.print("/");
 			}
 			else
 			{
-				System.out.print(player.getExtraBall());
+				System.out.print(player.getExtraThrow());
 			}
 		}
 		else
 		{
-			System.out.print(player.getExtraBall());
+			System.out.print(player.getExtraThrow());
 		}
 		
 		System.out.print(" | ");
