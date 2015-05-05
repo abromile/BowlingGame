@@ -398,23 +398,14 @@ public class Lane
 			{
 				System.out.println("Enter new player's name: ");
 				String newName = scan.nextLine();
-				/*
 				while (newName.length() > 10)
 				{
 					System.out.println("Name must be 10 or less characters.");
 					System.out.println("Enter new player's name: ");
 					newName = scan.nextLine();
 				}
-				*/
-				if(newName.length() > 10)
-				{
-					System.out.println("Name must be 10 or less characters.");
-				}
-				else
-				{
-					playerManager.addPlayer(newName);
-					board.printBoard(playerManager.getPlayerList());
-				}
+				playerManager.addPlayer(newName);
+				board.printBoard(playerManager.getPlayerList());
 			}
 		}
 
@@ -423,31 +414,21 @@ public class Lane
 		{
 			if (playerManager.playerCount() == 1)
 			{
-				System.out.println("Need at least one player in the game!");
+				System.out.println("Must have at least one player.");
 			}
+
 			else
 			{
 				System.out.println("Which player? (Enter a number 1-" + playerManager.playerCount() + ")");
-				try
+				int player_to_remove = scan.nextInt();
+				if(player_to_remove < 1 || player_to_remove > playerManager.playerCount())
 				{
-					int player_to_remove = Integer.parseInt(scan.nextLine());
-					if(player_to_remove < 1 || player_to_remove > playerManager.playerCount())
-					{
-						System.out.println("Player " + player_to_remove + " doesn't exist!");
-					}
-					else
-					{
-						playerManager.removePlayer(player_to_remove - 1);
-						board.printBoard(playerManager.getPlayerList());
-					}
+					System.out.println("Player " + player_to_remove + " doesn't exist");
 				}
-				catch(NumberFormatException e)
+				else
 				{
-					System.out.println("Invalid player!");
-				}
-				catch(NullPointerException e)
-				{
-					System.out.println("Invalid player!");
+					playerManager.removePlayer(player_to_remove - 1);
+					board.printBoard(playerManager.getPlayerList());
 				}
 			}
 		}
@@ -456,44 +437,35 @@ public class Lane
 		else if (cmd.equals("e"))
 		{
 			System.out.println("Which player? (Enter a number 1-" + playerManager.playerCount() + ")");
-			int player = Integer.parseInt(scan.nextLine());
-			try
+			int player = scan.nextInt();
+			if(player < 1 || player> playerManager.playerCount())
 			{
-				if(player < 1 || player> playerManager.playerCount())
+				System.out.println("Player " + player + " doesn't exist");
+			}
+			else
+			{
+				System.out.println("Which frame? (Enter a number 1-10)");
+				eframe = scan.nextInt();
+				if(eframe <= 10 || eframe >= 1)
 				{
-					System.out.println("Player " + player + " doesn't exist");
+					if (eframe != 10)
+					{
+						System.out.println("Which throw? (Enter 1 or 2)");
+						ethrow = scan.nextInt();
+					}
+					else 
+					{
+						System.out.println("Which throw? (Enter 1 or 2 or 3)");
+						ethrow = scan.nextInt();
+					}
 				}
 				else
 				{
-					System.out.println("Which frame? (Enter a number 1-10)");
-					eframe = Integer.parseInt(scan.nextLine());
-					if(eframe <= 10 || eframe >= 1)
-					{
-						if (eframe != 10)
-						{
-							System.out.println("Which throw? (Enter 1 or 2)");
-							ethrow = Integer.parseInt(scan.nextLine());
-						}
-						else 
-						{
-							System.out.println("Which throw? (Enter 1 or 2 or 3)");
-							ethrow = Integer.parseInt(scan.nextLine());
-						}
-					}
-					else
-					{
-						System.out.println("Invalid frame!");
-					}
+					System.out.println("Invalid frame.");
 				}
 			}
-			catch(NumberFormatException e)
-			{
-				System.out.println("Invalid value!");
-			}
-			catch(NullPointerException e)
-			{
-				System.out.println("Invalid value!");
-			}
+			
+
 		}
 
 		//EDIT PLAYER NAME
