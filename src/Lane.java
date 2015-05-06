@@ -685,30 +685,60 @@ public class Lane
 	
 	private static void checkOutput()
 	{
-		if(debugTarget.equals("edit_names"))
+		if(debugTarget.equals("edit_name"))
 		{
-			int bowler = Integer.parseInt(debugParams[0]);
+			int player = Integer.parseInt(debugParams[0]);
 			String name = debugParams[1];
 			if(
-					((bowler >= 1 && bowler <= playerManager.playerCount())
-					&& (name.length() <= 10
-							&& name.equals(playerManager.getPlayerName(bowler-1))))
+					((player >= 1 && player <= playerManager.playerCount() && name.length() <= 10)
+							&& name.equals(playerManager.getPlayerName(player-1)))
 					||
-					(((bowler < 1 || bowler > playerManager.playerCount())
-							|| name.length() > 10)
-					&& !(name.equals(playerManager.getPlayerName(bowler-1))))
+					(((player < 1 || player > playerManager.playerCount()) || name.length() > 10)
+							&& !(name.equals(playerManager.getPlayerName(player-1))))
 			)
-			{
 				System.out.println("pass");
-			}
+			else
+				System.out.println("fail");
+		}
+		else if(debugTarget.equals("add_player"))
+		{
+			String name = debugParams[0];
+			int oldPlayerCount = Integer.parseInt(debugParams[1]);
+			if(
+					((name.length() <= 10 && oldPlayerCount < 6)
+							&& (name.equals(playerManager.getPlayerName(oldPlayerCount))))
+					||
+					((name.length() > 10 || oldPlayerCount >= 6)
+							&& !(name.equals(playerManager.getPlayerName(oldPlayerCount))))
+			)
+				System.out.println("pass");
+			else
+				System.out.println("fail");
+			if(
+					((name.length() <= 10 && oldPlayerCount < 6)
+							&& (name.equals(playerManager.getPlayerName(oldPlayerCount)) && playerManager.playerCount() == oldPlayerCount + 1))
+					||
+					((name.length() > 10 || oldPlayerCount >= 6)
+							&& !(name.equals(playerManager.getPlayerName(oldPlayerCount)) && playerManager.playerCount() == oldPlayerCount))
+			)
+				System.out.println("pass");
+			else
+				System.out.println("fail");
+		}
+		else if(debugTarget.equals("remove_player"))
+		{
+			int player = Integer.parseInt(debugParams[0]);
+			int oldPlayerCount = Integer.parseInt(debugParams[1]);
+			if(
+					(player <= oldPlayerCount && player >= 1 && playerManager.playerCount() == oldPlayerCount - 1)
+					||
+					((player > oldPlayerCount || player < 1 || oldPlayerCount == 1) && playerManager.playerCount() == oldPlayerCount)
+			)
+				System.out.println("pass");
 			else
 			{
-				System.out.println(bowler);
-				System.out.println(name +  ", " + playerManager.getPlayerName(bowler));
-				System.out.println(((bowler < 1 || bowler > playerManager.playerCount())
-						|| name.length() > 10));
-				System.out.println(playerManager.playerCount());
-			}
+				System.out.println("fail");
+			}		
 		}
 		else
 		{
@@ -735,14 +765,14 @@ public class Lane
 		}
 		scan = new Scanner(System.in);		
 		
-		//Initialize player manager and board
+		// Initialize player manager and board
 		playerManager = new PlayerManager();
 		board = new Board();
 
-		//Main menu
+		// Main menu
 		displayWelcomeMenu();
 		
-		//Interpret commands
+		// Interpret commands
 		runWelcomeMenuCommand(getCommand());
 	}
 
