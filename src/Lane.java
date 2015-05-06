@@ -1,3 +1,7 @@
+/* Brendan Reis & Ashley Bromiley
+ * CS 347
+ * I pledge my honor that I have abided by the Stevens Honor System
+ */
 import java.io.ByteArrayInputStream;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -5,9 +9,37 @@ import java.util.Scanner;
 public class Lane 
 {
 	private static PlayerManager playerManager;
-	public static Scanner scan;
+	private static Scanner scan;
 	private static Board board;
+	
+	private static boolean debugFlag;
+	private static String debugTarget;
+	private static String[] debugParams;
+	
+	private static String[] commands;
+	private static int currentCommand;
 
+	public static String getCommand()
+	{
+		if(debugFlag && currentCommand < commands.length)
+		{
+			if(currentCommand == commands.length - 1)
+			{
+				checkOutput();
+				return null;
+			}
+			else
+			{
+				currentCommand++;
+				return commands[currentCommand];
+			}
+		}
+		else
+		{
+			return scan.nextLine();
+		}
+	}
+	
 	/**
 	 * just displays the startup menu
 	 */
@@ -30,12 +62,12 @@ public class Lane
 		{
 			//must have at least one player
 			System.out.println("Enter Player 1 name: ");
-			String newName = scan.nextLine();
+			String newName = getCommand();
 			while (newName.length() > 10)
 			{
 				System.out.println("Name must be 10 or less characters.");
 				System.out.println("Enter Player 1 name: ");
-				newName = scan.nextLine();
+				newName = getCommand();
 			}
 			playerManager.addPlayer(newName);
 			runGame();
@@ -50,7 +82,7 @@ public class Lane
 		{
 			System.out.println("You have entered an invalid command. ");
 			displayWelcomeMenu();
-			String command = scan.nextLine();
+			String command = getCommand();
 			runWelcomeMenuCommand(command);
 		}
 	}
@@ -82,7 +114,7 @@ public class Lane
 			printBanner(curr_player, curr_frame);
 			System.out.println("Press 'm' for menu or enter current throw. ");
 			System.out.println("Throw 1: ");
-			cmd = scan.nextLine();
+			cmd = getCommand();
 			
 			if (cmd.equals("m"))
 			{
@@ -130,7 +162,7 @@ public class Lane
 				printBanner(curr_player, curr_frame);
 				System.out.println("Press 'm' for menu or enter current throw. ");
 				System.out.println("Throw 2: ");
-				cmd = scan.nextLine();
+				cmd = getCommand();
 				
 				if (cmd.equals("m"))
 				{
@@ -190,7 +222,7 @@ public class Lane
 			printBanner(curr_player, curr_frame);
 			System.out.println("Press 'm' for menu or enter current throw. ");
 			System.out.println("Throw 1: ");
-			cmd = scan.nextLine();
+			cmd = getCommand();
 			
 			if (cmd.equals("m"))
 			{
@@ -237,7 +269,7 @@ public class Lane
 			printBanner(curr_player, curr_frame);
 			System.out.println("Press 'm' for menu or enter current throw. ");
 			System.out.println("Throw 2: ");
-			cmd = scan.nextLine();
+			cmd = getCommand();
 			
 			if (cmd.equals("m"))
 			{
@@ -289,7 +321,7 @@ public class Lane
 				printBanner(curr_player, curr_frame);
 				System.out.println("Press 'm' for menu or enter current throw. ");
 				System.out.println("Throw 3: ");
-				cmd = scan.nextLine();
+				cmd = getCommand();
 				
 				if (cmd.equals("m"))
 				{
@@ -361,7 +393,7 @@ public class Lane
 	public static void startMenu()
 	{
 		displayMenu();
-		String command = scan.nextLine();
+		String command = getCommand();
 		runCommand(command);
 	}
 
@@ -381,11 +413,12 @@ public class Lane
 	 * determines what to do and does current command
 	 * @param cmd; command to be done
 	 */
+	/**
+	 * determines what to do and does current command
+	 * @param cmd; command to be done
+	 */
 	public static void runCommand(String cmd)
 	{
-		int ethrow, eframe;
-		int player_to_change;
-
 		//ADD PLAYER
 		if (cmd.equals("a"))
 		{
@@ -397,15 +430,24 @@ public class Lane
 			else
 			{
 				System.out.println("Enter new player's name: ");
-				String newName = scan.nextLine();
+				String newName = getCommand();
+				/*
 				while (newName.length() > 10)
 				{
 					System.out.println("Name must be 10 or less characters.");
 					System.out.println("Enter new player's name: ");
-					newName = scan.nextLine();
+					newName = getCommand();
 				}
-				playerManager.addPlayer(newName);
-				board.printBoard(playerManager.getPlayerList());
+				*/
+				if(newName.length() > 10)
+				{
+					System.out.println("Name must be 10 or less characters.");
+				}
+				else
+				{
+					playerManager.addPlayer(newName);
+					board.printBoard(playerManager.getPlayerList());
+				}
 			}
 		}
 
@@ -414,21 +456,31 @@ public class Lane
 		{
 			if (playerManager.playerCount() == 1)
 			{
-				System.out.println("Must have at least one player.");
+				System.out.println("Need at least one player in the game!");
 			}
-
 			else
 			{
 				System.out.println("Which player? (Enter a number 1-" + playerManager.playerCount() + ")");
-				int player_to_remove = scan.nextInt();
-				if(player_to_remove < 1 || player_to_remove > playerManager.playerCount())
+				try
 				{
-					System.out.println("Player " + player_to_remove + " doesn't exist");
+					int ePlayer = Integer.parseInt(getCommand());
+					if(ePlayer < 1 || ePlayer > playerManager.playerCount())
+					{
+						System.out.println("Player " + ePlayer + " doesn't exist!");
+					}
+					else
+					{
+						playerManager.removePlayer(ePlayer - 1);
+						board.printBoard(playerManager.getPlayerList());
+					}
 				}
-				else
+				catch(NumberFormatException e)
 				{
-					playerManager.removePlayer(player_to_remove - 1);
-					board.printBoard(playerManager.getPlayerList());
+					System.out.println("Invalid value!");
+				}
+				catch(NullPointerException e)
+				{
+					System.out.println("Invalid value!");
 				}
 			}
 		}
@@ -437,58 +489,68 @@ public class Lane
 		else if (cmd.equals("e"))
 		{
 			System.out.println("Which player? (Enter a number 1-" + playerManager.playerCount() + ")");
-			int player = scan.nextInt();
-			if(player < 1 || player> playerManager.playerCount())
+			try
 			{
-				System.out.println("Player " + player + " doesn't exist");
-			}
-			else
-			{
-				System.out.println("Which frame? (Enter a number 1-10)");
-				eframe = scan.nextInt();
-				if(eframe <= 10 || eframe >= 1)
+				int ePlayer = Integer.parseInt(getCommand());
+				if(ePlayer < 1 || ePlayer > playerManager.playerCount())
 				{
-					if (eframe != 10)
-					{
-						System.out.println("Which throw? (Enter 1 or 2)");
-						ethrow = scan.nextInt();
-					}
-					else 
-					{
-						System.out.println("Which throw? (Enter 1 or 2 or 3)");
-						ethrow = scan.nextInt();
-					}
+					System.out.println("Player " + ePlayer + " doesn't exist");
 				}
 				else
 				{
-					System.out.println("Invalid frame.");
+					System.out.println("Which frame? (Enter a number 1-10)");
+					int eFrame = Integer.parseInt(getCommand());
+					if(eFrame <= 10 || eFrame >= 1)
+					{
+						int eThrow;
+						if (eFrame != 10)
+						{
+							System.out.println("Which throw? (Enter 1 or 2)");
+							eThrow = Integer.parseInt(getCommand());
+						}
+						else 
+						{
+							System.out.println("Which throw? (Enter 1 or 2 or 3)");
+							eThrow = Integer.parseInt(getCommand());
+						}
+					}
+					else
+					{
+						System.out.println("Invalid frame!");
+					}
 				}
 			}
-			
-
+			catch(NumberFormatException e)
+			{
+				System.out.println("Invalid value!");
+			}
+			catch(NullPointerException e)
+			{
+				System.out.println("Invalid value!");
+			}
 		}
 
 		//EDIT PLAYER NAME
 		else if (cmd.equals("p"))
 		{
 			System.out.println("Which player? (Enter a number 1-" + playerManager.playerCount() + ")");
-			String player = scan.nextLine();
-			player_to_change = Integer.parseInt(player);
-			if(player_to_change < 1 || player_to_change > playerManager.playerCount())
+			String player = getCommand();
+			int ePlayer = Integer.parseInt(player);
+			if(ePlayer < 1 || ePlayer > playerManager.playerCount())
 			{
-				System.out.println("Player " + player + " doesn't exist");
+				System.out.println("Player " + ePlayer + " doesn't exist");
 			}
 			else
 			{
 				System.out.println("What is the new name? ");
-				String name = scan.nextLine();
+				String name = getCommand();
 				while (name.length() > 10)
 				{
 					System.out.println("Name must be 1 to 10 characters in length");
 					System.out.println("What is the new name? ");
-					name = scan.nextLine();
+					name = getCommand();
 				}
-				playerManager.editName(player_to_change - 1, name);
+				playerManager.editName(ePlayer - 1, name);
 				board.printBoard(playerManager.getPlayerList());
 			}
 		}
@@ -592,19 +654,96 @@ public class Lane
 			playerManager.getPlayer(player).setScore(playerManager.getPlayer(player).getScore() + playerManager.getPlayer(player).getThrow1(9) + playerManager.getPlayer(player).getThrow2(9));
 		}
 	}
+	
+	private static void setupDebugParams(String[] values)
+	{
+		int valIndex = 2;
+		
+		// Setup debug parameters	
+		int size;
+		for(size = valIndex; !(values[size].equals("/")); size++)
+		{
+			;
+		}
+		debugParams = new String[size - valIndex];
+		for(int paramIndex = 0; paramIndex < debugParams.length; paramIndex++, valIndex++)
+		{
+			debugParams[paramIndex] = values[valIndex];
+		}
+		
+		// Setup program input
+		for(size = valIndex; size < values.length; size++)
+		{
+			;
+		}
+		commands = new String[size - valIndex];
+		for(int cmdIndex = 0; cmdIndex < commands.length; cmdIndex++, valIndex++)
+		{
+			commands[cmdIndex] = values[valIndex];
+		}
+	}
+	
+	private static void checkOutput()
+	{
+		if(debugTarget.equals("edit_names"))
+		{
+			int bowler = Integer.parseInt(debugParams[0]);
+			String name = debugParams[1];
+			if(
+					((bowler >= 1 && bowler <= playerManager.playerCount())
+					&& (name.length() <= 10
+							&& name.equals(playerManager.getPlayerName(bowler-1))))
+					||
+					(((bowler < 1 || bowler > playerManager.playerCount())
+							|| name.length() > 10)
+					&& !(name.equals(playerManager.getPlayerName(bowler-1))))
+			)
+			{
+				System.out.println("pass");
+			}
+			else
+			{
+				System.out.println(bowler);
+				System.out.println(name +  ", " + playerManager.getPlayerName(bowler));
+				System.out.println(((bowler < 1 || bowler > playerManager.playerCount())
+						|| name.length() > 10));
+				System.out.println(playerManager.playerCount());
+			}
+		}
+		else
+		{
+			System.out.println("Error: Unrecognized debug target!");
+		}
+		System.exit(0);
+	}
 
 	public static void main(String[] args)
-	{		
-		scan = new Scanner(System.in);
+	{
+		// Check if debugging and setup input
+		if(args.length > 1 && args[0].equals("debug"))
+		{
+			System.out.println("***DEBUG MODE***");
+			debugFlag = true;
+			debugTarget = args[1];
+			setupDebugParams(args);		
+			currentCommand = 0;
+		}
+		else
+		{
+			debugFlag = false;
+			
+		}
+		scan = new Scanner(System.in);		
+		
+		//Initialize player manager and board
 		playerManager = new PlayerManager();
 		board = new Board();
-		//set up for new game
 
 		//Main menu
 		displayWelcomeMenu();
 		
-		//interpret commands
-		runWelcomeMenuCommand(scan.nextLine());
+		//Interpret commands
+		runWelcomeMenuCommand(getCommand());
 	}
 
 }

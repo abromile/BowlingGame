@@ -1,22 +1,31 @@
 Ashley Bromiley + Brendan Reis
+
 I pledge my honor that I have abided by the Stevens Honor System.
+
+
 
 https://github.com/abromile/BowlingGame
 
+
+
 As of right now, the system acts as a single-lane, text-based game.
+
 The user inputs their bowling score for each turn, can add and 
 remove players from the lane, and edit throws on the board.
-
 This should be started from the Lane class and all java files should 
 be in the same package.
+
 
 There are JUnit tests for the Player and PlayerManager classes.
 They test that all of their methods return the correct output for
 a given set of inputs.
 
 
+
 Below is a brief summary of all the testing and checks we have done
 outside of doing JUnit tests.
+
+
 
 MAIN MENU
 -user enters 'q': should quit the program

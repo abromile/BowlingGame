@@ -31,7 +31,7 @@ public class PlayerManager {
 	 */
 	public void editName(int index, String name)
 	{
-		if(name.length() < 10)
+		if(name.length() <= 10)
 		{
 			players.get(index).setName(name);
 		}
@@ -93,7 +93,14 @@ public class PlayerManager {
 
 	public Player getPlayer(int index)
 	{
-		return players.get(index);
+		if(index >= 0 && index < players.size())
+		{
+			return players.get(index);
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	public int getThrow1m(int player, int frame)

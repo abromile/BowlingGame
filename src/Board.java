@@ -3,10 +3,8 @@ import java.util.ArrayList;
 
 public class Board 
 {	
-
 	public Board()
 	{
-
 	}
 
 	private void printScores(Player player)
@@ -112,7 +110,6 @@ public class Board
 		{
 			printScores(pl.get(i));
 		}
-		System.out.println("      Team Score: ");
 	}
 
 }
