@@ -502,16 +502,42 @@ public class Lane
 					int eFrame = Integer.parseInt(getCommand());
 					if(eFrame <= 10 || eFrame >= 1)
 					{
-						int eThrow;
-						if (eFrame != 10)
+						if (eFrame == 10)
 						{
-							System.out.println("Which throw? (Enter 1 or 2)");
-							eThrow = Integer.parseInt(getCommand());
+							System.out.println("Which throw? (Enter 1, 2, or 3)");
 						}
 						else 
 						{
-							System.out.println("Which throw? (Enter 1 or 2 or 3)");
-							eThrow = Integer.parseInt(getCommand());
+							System.out.println("Which throw? (Enter 1 or 2)");
+						}
+						int eThrow = Integer.parseInt(getCommand());
+						if((eFrame == 10 && eThrow == 3) || (eThrow == 1 || eThrow == 2))
+						{
+							System.out.println("What should the throw be now? (Enter a number 1-10)");
+							int newScore = Integer.parseInt(getCommand());
+							if(newScore >= 0 && newScore <= 10)
+							{
+								if(eFrame == 10 && eThrow == 3)
+								{
+									playerManager.getPlayer(ePlayer - 1).setExtraThrow(newScore);
+								}
+								else if(eThrow == 1)
+								{
+									playerManager.setThrow1m(ePlayer - 1, eFrame - 1, newScore);
+								}
+								else
+								{
+									playerManager.setThrow2m(ePlayer - 1, eFrame - 1, newScore);
+								}
+							}
+							else
+							{
+								System.out.println("Invalid score!");
+							}
+						}
+						else
+						{
+							System.out.println("Invalid throw!");
 						}
 					}
 					else
@@ -739,6 +765,49 @@ public class Lane
 			{
 				System.out.println("fail");
 			}		
+		}
+		else if(debugTarget.equals("edit_throw"))
+		{
+			int player = Integer.parseInt(debugParams[0]);
+			int eFrame = Integer.parseInt(debugParams[1]);
+			int eThrow = Integer.parseInt(debugParams[2]);
+			int newScore = Integer.parseInt(debugParams[3]);
+			if(eThrow == 1 || eThrow == 2)
+			{
+				if(
+					(((player <= playerManager.playerCount() && player >= 1)
+						&& (eFrame <= 10 && eFrame >= 1)
+						&& (eThrow == 1 || eThrow == 2 || (eThrow == 3 && eFrame == 10))
+						&& (newScore <= 10 && newScore >= 0))
+					&& ((eThrow == 1 ? playerManager.getThrow1m(player - 1, eFrame - 1) : playerManager.getThrow2m(player - 1, eFrame - 1)) == newScore))
+					||
+					!(((player <= playerManager.playerCount() && player >= 1)
+							&& (eFrame <= 10 && eFrame >= 1)
+							&& (eThrow == 1 || eThrow == 2 || (eThrow == 3 && eFrame == 10))
+							&& (newScore <= 10 && newScore >= 0)))
+				)
+					System.out.println("pass");
+				else
+					System.out.println("fail");
+			}
+			else
+			{			
+				if(
+						(((player <= playerManager.playerCount() && player >= 1)
+							&& (eFrame <= 10 && eFrame >= 1)
+							&& (eThrow == 1 || eThrow == 2 || (eThrow == 3 && eFrame == 10))
+							&& (newScore <= 10 && newScore >= 0))
+						&& (playerManager.getPlayer(player - 1).getExtraThrow() == newScore))
+						||
+						!(((player <= playerManager.playerCount() && player >= 1)
+								&& (eFrame <= 10 && eFrame >= 1)
+								&& (eThrow == 1 || eThrow == 2 || (eThrow == 3 && eFrame == 10))
+								&& (newScore <= 10 && newScore >= 0)))
+					)
+						System.out.println("pass");
+					else
+						System.out.println("fail");
+			}
 		}
 		else
 		{
