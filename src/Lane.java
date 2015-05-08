@@ -2,8 +2,7 @@
  * CS 347
  * I pledge my honor that I have abided by the Stevens Honor System
  */
-import java.io.ByteArrayInputStream;
-import java.util.InputMismatchException;
+
 import java.util.Scanner;
 
 public class Lane 
@@ -47,8 +46,8 @@ public class Lane
 	{
 		System.out.println("Welcome to the Stevens Bowling Alley!");
 		System.out.println();
-		System.out.println("s: start a new game");
-		System.out.println("q: quit");
+		System.out.println("s: Start a new game");
+		System.out.println("q: Quit");
 	}
 
 	/**
@@ -61,12 +60,12 @@ public class Lane
 		if (cmd.equals("s"))
 		{
 			//must have at least one player
-			System.out.println("Enter Player 1 name: ");
+			System.out.print("Enter Player 1 name: ");
 			String newName = getCommand();
 			while (newName.length() > 10)
 			{
 				System.out.println("Name must be 10 or less characters.");
-				System.out.println("Enter Player 1 name: ");
+				System.out.print("Enter Player 1 name: ");
 				newName = getCommand();
 			}
 			playerManager.addPlayer(newName);
@@ -113,7 +112,7 @@ public class Lane
 		{
 			printBanner(curr_player, curr_frame);
 			System.out.println("Press 'm' for menu or enter current throw. ");
-			System.out.println("Throw 1: ");
+			System.out.print("Throw 1: ");
 			cmd = getCommand();
 			
 			if (cmd.equals("m"))
@@ -161,7 +160,7 @@ public class Lane
 			{
 				printBanner(curr_player, curr_frame);
 				System.out.println("Press 'm' for menu or enter current throw. ");
-				System.out.println("Throw 2: ");
+				System.out.print("Throw 2: ");
 				cmd = getCommand();
 				
 				if (cmd.equals("m"))
@@ -221,7 +220,7 @@ public class Lane
 		{
 			printBanner(curr_player, curr_frame);
 			System.out.println("Press 'm' for menu or enter current throw. ");
-			System.out.println("Throw 1: ");
+			System.out.print("Throw 1: ");
 			cmd = getCommand();
 			
 			if (cmd.equals("m"))
@@ -268,7 +267,7 @@ public class Lane
 		{
 			printBanner(curr_player, curr_frame);
 			System.out.println("Press 'm' for menu or enter current throw. ");
-			System.out.println("Throw 2: ");
+			System.out.print("Throw 2: ");
 			cmd = getCommand();
 			
 			if (cmd.equals("m"))
@@ -320,7 +319,7 @@ public class Lane
 			{
 				printBanner(curr_player, curr_frame);
 				System.out.println("Press 'm' for menu or enter current throw. ");
-				System.out.println("Throw 3: ");
+				System.out.print("Throw 3: ");
 				cmd = getCommand();
 				
 				if (cmd.equals("m"))
@@ -402,11 +401,11 @@ public class Lane
 	 */
 	public static void displayMenu()
 	{
-		System.out.println("a: add player");
-		System.out.println("r: remove player");
-		System.out.println("e: edit throw");
-		System.out.println("p: edit player name");
-		System.out.println("b: back to game");
+		System.out.println("a: Add player");
+		System.out.println("r: Remove player");
+		System.out.println("e: Edit throw");
+		System.out.println("p: Edit player name");
+		System.out.println("b: Back to game");
 	}
 
 	/**
@@ -429,7 +428,7 @@ public class Lane
 
 			else
 			{
-				System.out.println("Enter new player's name: ");
+				System.out.print("Enter new player's name: ");
 				String newName = getCommand();
 				/*
 				while (newName.length() > 10)
@@ -560,25 +559,37 @@ public class Lane
 		else if (cmd.equals("p"))
 		{
 			System.out.println("Which player? (Enter a number 1-" + playerManager.playerCount() + ")");
-			String player = getCommand();
-			int ePlayer = Integer.parseInt(player);
-			if(ePlayer < 1 || ePlayer > playerManager.playerCount())
+			try
 			{
-				System.out.println("Player " + ePlayer + " doesn't exist");
-			}
-			else
-			{
-				System.out.println("What is the new name? ");
-				String name = getCommand();
-				while (name.length() > 10)
+				String player = getCommand();
+				int ePlayer = Integer.parseInt(player);
+
+				if(ePlayer < 1 || ePlayer > playerManager.playerCount())
 				{
-					System.out.println("Name must be 1 to 10 characters in length");
-					System.out.println("What is the new name? ");
-					name = getCommand();
+					System.out.println("Player " + ePlayer + " doesn't exist");
 				}
-				playerManager.editName(ePlayer - 1, name);
-				board.printBoard(playerManager.getPlayerList());
+				else
+				{
+					System.out.print("What is the new name?: ");
+					String name = getCommand();
+					while (name.length() > 10)
+					{
+						System.out.println("Name must be 1 to 10 characters in length");
+						System.out.print("What is the new name?: ");
+						name = getCommand();
+					}
+					playerManager.editName(ePlayer - 1, name);
+					board.printBoard(playerManager.getPlayerList());
+				}
 			}
+			catch(NumberFormatException e)
+			{
+				System.out.println("Invalid value!");
+			}
+			catch(NullPointerException e)
+			{
+				System.out.println("Invalid value!");
+			}	
 		}
 
 		//RETURN TO GAME
